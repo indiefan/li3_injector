@@ -7,7 +7,7 @@ use \li3_injector\extensions\Injector;
 class InjectorTest extends \lithium\test\Unit {
 
 	public function setup() {
-		$this->markup = file_get_contents(LITHIUM_APP_PATH . '/libraries/li3_injector/tests/mocks/extensions/simpleMarkup.html');
+		$this->markup = file_get_contents(LITHIUM_APP_PATH . '/tests/mocks/extensions/simpleMarkup.html');
 	}
 
 	public function testBasicHeadInjection() {
@@ -38,6 +38,16 @@ class InjectorTest extends \lithium\test\Unit {
 		$result = $injector->inject("head", "()/");
 
 		$this->assertPattern($expected, $result);
+	}
+	
+	public function testGoogleAnalyticsInjection() {
+	  $expected = '/.*<script type="text\/javascript">.+_gaq.push\(\["_setAccount", "UA-123456-7"]\);.*/s';
+	  
+	  $injector = new Injector(array("dom" => $this->markup));
+	  
+	  $result = $injector->googleAnalytics('UA-123456-7');
+	  
+	  $this->assertPattern($expected, $result);
 	}
 
 	public function testJQueryInjection() {
